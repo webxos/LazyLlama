@@ -41,10 +41,8 @@ Note: The HEPA time‑series prediction and HydraHead hybrid attention modules h
 
 - Python 3.10 – 3.13
 - pip
-- (Optional) Ollama for teacher models
-- (Optional) NVIDIA GPU for CUDA acceleration
-
-### Linux / macOS / WSL2
+- Ollama
+- Other packages auto installed
 
 # 1. Download and put all files into this file structure on your system:
 
@@ -84,8 +82,6 @@ Note: The HEPA time‑series prediction and HydraHead hybrid attention modules h
       ├── lazytorch_core.py           # LazyTorch memory‑mapped core
 
 ```
-
-
 
 # 2. Run this unified startup script:
 
