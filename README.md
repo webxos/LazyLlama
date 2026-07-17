@@ -272,3 +272,22 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 ## License
 
 MIT
+
+# SCREENSHOTS:
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen1.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen2.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen3.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen4.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen5.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen6.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen7.png)
+
+![Alt Text](https://github.com/webxos/LazyLlama/blob/main/assets/screen8.png)
+
