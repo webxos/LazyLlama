@@ -37,6 +37,7 @@ Lazy inference engine for distilling, pruning, and bench-marking large language 
 ### Prerequisites
 
 - Python 3.10 – 3.13
+- python3-venv
 - pip
 - Ollama
 - Other packages auto installed
