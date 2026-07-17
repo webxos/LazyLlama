@@ -258,7 +258,45 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
   ```bash
   sudo rm -rf /tmp/* /tmp/.* 2>/dev/null; export TMPDIR=~/tmp; mkdir -p ~/tmp; (for tmp storage cleanup issues)
   ```
-  
+## How It Manages Local Ollama Instances
+
+### Unified API: 
+The framework's lazy_infer.py module provides a common interface (BaseInferenceEngine) that abstracts different backends. You can use Ollama models via commands like chat, distillation, or benchmarking.
+It checks if Ollama is reachable (ollama serve must be running).
+Supports Ollama as a teacher for distillation/fine-tuning (e.g., KL divergence or QLoRA from Ollama/GGUF models).
+Syncs/discovers Ollama models in the model registry (lazy_model_manager.py).
+
+### Model Registry & Lifecycle: 
+ModelManager handles registration, downloading, student creation, etc. Ollama models are treated as valid references (e.g., ollama://modelname URIs) without full local validation like HF models.
+Inference Flow:
+For chat/generation: Routes to the appropriate engine (Ollama engine if selected).
+Supports streaming, batch, speculative decoding, etc.
+Unload mechanisms free resources after use.
+
+
+### Core:
+Deferred / Just-in-Time (Lazy) Model Loading
+The standout memory-saving feature is LazyTorch (enabled by default via use_lazytorch: true in config):
+
+### Memory-Mapped Weights:
+Model weights are stored as memory-mapped NumPy arrays on disk (not fully loaded into RAM).
+Only parameters needed for the current forward pass are loaded on-demand (JIT).
+This keeps peak RAM extremely low (~<500MB for 7B models vs. 14GB+ for standard PyTorch).
+
+### On-Demand Loading:
+Models stay "lazy" until actively processing data (prompt inference/generation).
+Supports most Hugging Face architectures.
+Combined with other techniques:
+E8 Lattice Quantization (2-5 bits/weight, default 4-bit).
+KV Cache Compression (TurboQuant, 4-8 bits, with residual uncompressed tokens for accuracy).
+Pruning + recovery pipelines.
+
+
+### Ollama Integration with Lazy Loading:
+Ollama itself uses GGUF + mmap under the hood for efficient loading.
+LazyLlama can use Ollama models directly or convert/export between formats (e.g., to LazyTorch or GGUF).
+For low-resource setups, it prefers CPU-optimized paths and can fall back or orchestrate with Ollama for specific tasks like distillation.
+
 ---
 
 ## License
