@@ -11,7 +11,7 @@
 
 *Low‑End Inference Engine – Trade Time for Accuracy*
 
-Lazy inference engine for distilling, pruning, and benchmarking large language models on resource‑constrained devices. It combines memory‑mapped loading, extreme quantization, KV cache compression, and a Mixture of Experts student architecture to achieve sub‑500MB peak RAM for 7B models, while still delivering usable inference speeds.
+Lazy inference engine for distilling, pruning, and bench-marking large language models on resource‑constrained devices. It combines memory‑mapped loading, extreme quantization, KV cache compression, and a Mixture of Experts student architecture to achieve sub‑500MB peak RAM for 7B models, while still delivering usable inference speeds.
 
 ---
 
