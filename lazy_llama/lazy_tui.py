@@ -157,7 +157,7 @@ LAZY_LOGO = r"""
 ║         ║          + True Lazy Loading + Checkpoint Resume             ║             ║
 ║         ║                  + Multi-OS Support (Linux/macOS/Windows)    ║             ║
 ║         ║                    + Endless RL Self‑Improvement             ║             ║
-║         ║              + Benchmark Settings & Reports                 ║             ║
+║         ║              + Benchmark Settings & Reports                  ║             ║
 ║         ╚══════════════════════════════════════════════════════════════╝             ║
 ╚══════════════════════════════════════════════════════════════════════════════════════╝
 """
