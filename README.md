@@ -89,6 +89,8 @@ Note: The HEPA time‑series prediction and HydraHead hybrid attention modules h
 
 # 2. Run this unified startup script:
 
+*Warning: Requires sudo*
+
 ```bash
 cd ~/lazyllama/ (The folder you have the files in)
 sudo rm -rf /tmp/* /tmp/.* 2>/dev/null; export TMPDIR=~/tmp; mkdir -p ~/tmp; 
