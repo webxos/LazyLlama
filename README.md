@@ -264,6 +264,13 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 - Increase `qlora_r` to 16 or 32 during recovery.
 - Run `benchmark-students` to check perplexity – if over 80, reject the model.
 
+### Tmp is Full
+
+- Run This bash for linux debian to clear tmp:
+  ```bash
+  sudo rm -rf /tmp/* /tmp/.* 2>/dev/null; export TMPDIR=~/tmp; mkdir -p ~/tmp; (for tmp storage cleanup issues)
+  ```
+  
 ---
 
 ## License
