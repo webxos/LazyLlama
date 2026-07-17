@@ -266,7 +266,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ### Tmp is Full
 
-- Run This bash for linux debian to clear tmp:
+- Run this bash for Linux Debian to clear tmp:
   ```bash
   sudo rm -rf /tmp/* /tmp/.* 2>/dev/null; export TMPDIR=~/tmp; mkdir -p ~/tmp; (for tmp storage cleanup issues)
   ```
