@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------------
+  # Lazy Llama main service (TUI / dashboard)
+  # ------------------------------------------------------------------
+  lazy-llama:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lazy-llama:latest
+    container_name: lazy-llama
+    restart: unless-stopped
+    ports:
+      - "8080:8080"                     # Dashboard web UI
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - lazy-net
+    volumes:
+      - lazy_models:/root/.lazy_llama/models
+      - lazy_checkpoints:/root/.lazy_llama/checkpoints
+      - lazy_logs:/root/.lazy_llama/logs
+      - lazy_cache:/root/.lazy_llama/cache
+      - lazy_lazytorch:/root/.lazy_llama/lazytorch_cache
+      - lazy_exports:/root/.lazy_llama/exports
+    environment:
+      - LAZY_PLATFORM=linux
+      - OLLAMA_HOST=http://ollama:11434
+      - LAZY_DASHBOARD_PORT=8080
+    # For interactive TUI (if you want to run with -it)
+    stdin_open: true
+    tty: true
+    # Resource limits to prevent memory exhaustion
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # ------------------------------------------------------------------
+  # Ollama service for LLM inference
+  # ------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: lazy-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - lazy-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # ------------------------------------------------------------------
+  # Kali Linux sandbox container for isolated tool execution (optional)
+  # ------------------------------------------------------------------
+  kali-sandbox:
+    image: kalilinux/kali-rolling:latest
+    container_name: lazy-kali-sandbox
+    command: ["tail", "-f", "/dev/null"]
+    cap_add:
+      - NET_ADMIN          # Required for network scanning tools
+    restart: unless-stopped
+    networks:
+      - lazy-net
+    healthcheck:
+      test: ["CMD", "nmap", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ./phalanx/tools:/opt/phalanx/tools:ro
+      - ./phalanx/wordlists:/opt/phalanx/wordlists:ro
+      - ./phalanx/scripts:/opt/phalanx/scripts:ro
+      - ./phalanx/sandbox-data:/root/.phalanx
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - OLLAMA_HOST=http://ollama:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    stdin_open: true
+    tty: true
+    depends_on:
+      ollama:
+        condition: service_healthy
+        required: false   # Optional; falls back to host if not available
+
+# ------------------------------------------------------------------
+# Networks and Volumes
+# ------------------------------------------------------------------
+networks:
+  lazy-net:
+    driver: bridge
+
+volumes:
+  lazy_models:
+    name: lazy_models_data
+  lazy_checkpoints:
+    name: lazy_checkpoints_data
+  lazy_logs:
+    name: lazy_logs_data
+  lazy_cache:
+    name: lazy_cache_data
+  lazy_lazytorch:
+    name: lazy_lazytorch_cache_data
+  lazy_exports:
+    name: lazy_exports_data
+  ollama_data:
+    name: lazy_ollama_data
