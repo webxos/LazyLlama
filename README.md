@@ -47,7 +47,41 @@ Note: The HEPA time‑series prediction and HydraHead hybrid attention modules h
 ### Linux / macOS / WSL2
 
 # 1. Download and put all files into this file structure on your system:
+
+ File Tree
+
 ```
+/lazyllama/ (Main folder)
+├── README.md                   # Manual
+├── start.sh                    # Linux/macOS/WSL startup script
+├── start.bat                   # Windows CMD startup script
+├── start.ps1                   # Windows PowerShell startup script
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  
+├── docker-compose-yml
+├── setup.py                    # Package installation
+├── pyproject.toml              # Build configuration
+├── __init__.py                 # Package exports
+ ----/lazyllama/lazy_llama/ (Sub folder)
+      ├── lazy_prune.py               # Pruning engine (magnitude, neuron, task, structured, Fisher)
+      ├── bootstrap.py                # CLI entry point with all commands
+      ├── config.py                   # Configuration management
+      ├── utils.py                    # Shared utilities (memory, checkpoints, validation)
+      ├── lazy_model_manager.py       # Registry and student creation
+      ├── lazy_infer.py               # Inference engines (GGUF, Ollama, Transformers, LazyTorch, vLLM)
+      ├── lazy_distill.py             # Distillation engine (KL and fine‑tuning)
+      ├── lazy_tui.py                 # Rich TUI interface
+      ├── dashboard_server.py         # Web dashboard
+      ├── benchmark.py                # Benchmarking (TPS, perplexity, MC, long‑context)
+      ├── endless_rl.py               # Endless self‑improvement loop
+      ├── micro_moe.py                # Mixture of Experts implementation
+      ├── lazy_speculative.py         # Speculative decoding (DraftHead, MedusaHead)
+      ├── zero_shot_compensation.py   # Adapter‑based compensation
+      ├── e8_quantize.py              # E8 lattice quantization
+      ├── kv_compressor.py            # KV cache compression
+      ├── model_merging.py            # Model merging strategies
+      ├── metrics_store.py            # Metrics collection for UI
+      ├── lazytorch_core.py           # LazyTorch memory‑mapped core
 
 ```
 
@@ -62,82 +96,7 @@ chmod +x /home/kali/lazyllama/start.sh
 cd /home/kali/lazyllama && ./start.sh
 ```
 
-The startup script automatically detects your system and installs the correct CPU‑only version of PyTorch to avoid illegal instruction errors on older CPUs.
-
-### Windows (PowerShell)
-
-```powershell
-# 1. Clone
-git clone https://github.com/lazy-llama/lazy-llama.git
-cd lazy-llama
-
-# 2. Run the startup script
-.\start.ps1
-```
-
-For manual installation on Windows, use `pip install -e .` and then `python -m lazy_llama.bootstrap`.
-
-### GPU Support
-
-To enable GPU acceleration (bitsandbytes, CUDA):
-
-```bash
-pip install -e .[gpu]
-```
-
-Or for all optional dependencies:
-
-```bash
-pip install -e .[all]
-```
-
----
-
-## Quickstart (5 Minutes)
-
-### 1. Download a lightweight base model
-
-```bash
-python -m lazy_llama.bootstrap download huggingface distilgpt2
-```
-
-### 2. Create a student model
-
-```bash
-python -m lazy_llama.bootstrap create-student --base distilgpt2 --student-name my_student
-```
-
-### 3. Chat with it
-
-```bash
-python -m lazy_llama.bootstrap chat --student my_student
-```
-
-Type your messages; the model will respond.
-
-### 4. Start the Web Dashboard
-
-```bash
-python -m lazy_llama.bootstrap dashboard
-```
-
-Open [http://localhost:8080/dashboard](http://localhost:8080/dashboard) to see real‑time metrics, manage models, and launch distillation/pruning/benchmark.
-
-### 5. Run Endless Self‑Improvement (REAP + RL)
-
-```bash
-python -m lazy_llama.bootstrap endless auto --models my_student --cycles -1 --hyperparameter-search
-```
-
-This will start an infinite loop that benchmarks, decides (distill or prune), applies, and improves your model automatically. Check the TUI or dashboard for progress.
-
----
-
-## Configuration
-
-All settings are stored in `~/.lazy_llama/config.json`. You can also override via command‑line flags.
-
-### Essential Settings
+### Settings
 
 | Field | Default | Description |
 |-------|---------|-------------|
@@ -156,11 +115,6 @@ All settings are stored in `~/.lazy_llama/config.json`. You can also override vi
 | `use_zero_shot_compensation` | `true` | Apply adapters after pruning to recover performance. |
 | `distill_alpha` | `0.8` | Teacher signal strength in distillation (higher = more teacher influence). |
 
-To change settings:
-
-```bash
-python -m lazy_llama.bootstrap settings  # TUI will let you update interactively
-```
 
 Or edit the JSON file directly.
 
@@ -191,66 +145,7 @@ Use `--help` on any command for detailed options.
 
 ---
 
-## Architecture Overview
-
-```
-+------------------------------------------------------------------+
-|                        Lazy Llama Core                            |
-+------------------------------------------------------------------+
-|  +-------------+  +-------------+  +-------------+  +-----------+ |
-|  |  Model      |  |  Inference  |  |  Training   |  |  Self-    | |
-|  |  Management |  |  Engines    |  |  Pipelines  |  |  Improve  | |
-|  +-------------+  +-------------+  +-------------+  +-----------+ |
-|  | Registry     |  | GGUF        |  | Distillation|  | REAP      | |
-|  | LazyTorch    |  | Ollama      |  | Pruning     |  | Endless RL| |
-|  | Download     |  | Transformers|  | Finetuning  |  | Bandit    | |
-|  | Student      |  | vLLM        |  | QLoRA/LoRA  |  | Hyperparam| |
-|  | Creation     |  | LazyTorch   |  | MoE         |  | Merging   | |
-+------------------------------------------------------------------+
-```
-
-- **Model Management**: Registry (JSON) tracks all models (local, Ollama, vLLM). Students are created by copying base models (hardlinks to save space).
-- **Inference Engines**: Unified interface (`lazy_generate_stream`) – switch between engines seamlessly.
-- **Training Pipelines**: Distillation (KL/fine‑tune), Pruning (magnitude/neuron/task/structured), all with checkpoint resume and progress callbacks.
-- **Self‑Improvement**: The Endless RL loop orchestrates a cycle of Benchmark -> Decide -> Act. It uses a bandit policy (epsilon‑greedy) to select the best action (distill or prune) for a given model, tracks improvement, and optionally performs hyperparameter search and model merging.
-
----
-
-## File Tree
-
-```
-lazy_llama/
-├── __init__.py                 # Package exports
-├── bootstrap.py                # CLI entry point with all commands
-├── config.py                   # Configuration management
-├── utils.py                    # Shared utilities (memory, checkpoints, validation)
-├── lazy_model_manager.py       # Registry and student creation
-├── lazy_infer.py               # Inference engines (GGUF, Ollama, Transformers, LazyTorch, vLLM)
-├── lazy_distill.py             # Distillation engine (KL and fine‑tuning)
-├── lazy_prune.py               # Pruning engine (magnitude, neuron, task, structured, Fisher)
-├── lazy_tui.py                 # Rich TUI interface
-├── dashboard_server.py         # Web dashboard
-├── benchmark.py                # Benchmarking (TPS, perplexity, MC, long‑context)
-├── endless_rl.py               # Endless self‑improvement loop
-├── micro_moe.py                # Mixture of Experts implementation
-├── lazy_speculative.py         # Speculative decoding (DraftHead, MedusaHead)
-├── zero_shot_compensation.py   # Adapter‑based compensation
-├── e8_quantize.py              # E8 lattice quantization
-├── kv_compressor.py            # KV cache compression
-├── model_merging.py            # Model merging strategies
-├── metrics_store.py            # Metrics collection for UI
-├── lazytorch_core.py           # LazyTorch memory‑mapped core
-├── start.sh                    # Linux/macOS/WSL startup script
-├── start.bat                   # Windows CMD startup script
-├── start.ps1                   # Windows PowerShell startup script
-├── requirements.txt            # Python dependencies
-├── setup.py                    # Package installation
-└── pyproject.toml              # Build configuration
-```
-
----
-
-## Advanced Features
+## More Features
 
 ### LazyTorch – Extreme Memory Savings
 
