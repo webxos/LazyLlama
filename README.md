@@ -11,7 +11,7 @@
 
 *Low‑End Inference Engine – Trade Time for Accuracy*
 
-Lazy Llama is a production‑grade toolkit for running, distilling, pruning, and continuously improving large language models on resource‑constrained devices (CPU, <8GB RAM). It combines memory‑mapped loading, extreme quantization, KV cache compression, and a Mixture of Experts student architecture to achieve sub‑500MB peak RAM for 7B models, while still delivering usable inference speeds.
+Lazy Llama is a toolkit for running, distilling, pruning, and continuously improving large language models on resource‑constrained devices (CPU, <8GB RAM). It combines memory‑mapped loading, extreme quantization, KV cache compression, and a Mixture of Experts student architecture to achieve sub‑500MB peak RAM for 7B models, while still delivering usable inference speeds.
 
 ---
 
