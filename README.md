@@ -28,10 +28,7 @@ Lazy inference engine for distilling, pruning, and benchmarking large language m
 | Self‑improvement | REAP + Endless RL | Automated pipeline (Distill -> Prune -> Recover -> Eval) with bandit policy, hyperparameter search, model merging. |
 | Inference Engines | GGUF, Ollama, Transformers, vLLM, LazyTorch | Unified API for all formats, streaming, batch, speculative decoding. |
 | UI | TUI + Web Dashboard | Real‑time metrics, model management, full control via Rich TUI or Flask dashboard. |
-| Speculative Decoding | DSpark/Medusa‑style | Draft heads predict multiple tokens in parallel for 30‑100%+ speedup on CPU. |
 | Recovery Pipeline | One‑click prune + distill | Prune a model (15% gentle ratio) and immediately recover via QLoRA distillation. |
-
-Note: The HEPA time‑series prediction and HydraHead hybrid attention modules have been removed in this version to keep the codebase focused on LLM inference and improvement. All core functionality remains fully intact.
 
 ---
 
