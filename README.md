@@ -90,7 +90,7 @@ Note: The HEPA time‑series prediction and HydraHead hybrid attention modules h
 ```bash
 cd ~/lazyllama/ (The folder you have the files in)
 sudo rm -rf /tmp/* /tmp/.* 2>/dev/null; export TMPDIR=~/tmp; mkdir -p ~/tmp; 
-chmod +x /home/kali/lazyllama/start.sh
+chmod +x ~/lazyllama/start.sh
 cd ~/lazyllama/ && ./start.sh
 ```
 
