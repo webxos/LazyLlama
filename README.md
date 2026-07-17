@@ -161,19 +161,6 @@ Use `--help` on any command for detailed options.
 - Mixed‑dimension: reduce dimension for older tokens (experimental).
 - Residual tokens (default 128) keep recent tokens uncompressed for high accuracy.
 
-### Micro MoE (Mixture of Experts)
-
-- Replaces dense FFN layers with sparse MoE (4‑16+ experts, top‑1/4 routing).
-- Hierarchical routing reduces overhead for many experts.
-- Static routing (KMeans) makes inference deterministic and fuses well with llama.cpp/Ollama.
-
-### Speculative Decoding (Medusa‑style)
-
-- Draft head predicts multiple tokens in parallel.
-- Tree‑based verification with greedy prefix acceptance.
-- Confidence‑based early stopping.
-- Multiple draft heads can be trained (distillation) for longer drafts.
-
 ### Zero‑Shot Compensation
 
 - Low‑rank adapters compensate for errors from pruning or quantization.
