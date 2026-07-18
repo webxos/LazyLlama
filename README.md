@@ -1,6 +1,6 @@
 # Lazy Llama v3.6 (Under Development + Testing)
 
-Warning: *Temporary Name, New Name Under Development*
+Warning: *Lazy Llama is a Temporary Name, New Name Under Development*
 
 ```
     ██╗      █████╗ ███████╗██╗   ██╗    ██╗     ██╗      █████╗ ███╗   ███╗ █████╗  
