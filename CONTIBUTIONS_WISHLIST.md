@@ -224,31 +224,8 @@ What to Modify
 
 # UPDATED 7/18/2026
 
-``` markdown
+
 # Lazy Llama v4.0 Enhancement Guide: Full Training Pipeline + Dashboard Redesign
-
-This document provides a comprehensive, file-by-file implementation plan to upgrade **Lazy Llama v3.6** to **v4.0**. It adds:
-
-- A **full training pipeline** (`distill → prune → finetune → benchmark → export`) with **endless looping** and a user-provided dataset.
-- **Optuna hyperparameter tuning** for each pipeline stage.
-- **GRPO-style fine-tuning** (reward modeling) and **Micro MoE** integration.
-- A **redesigned dashboard** with a live status terminal, global progress bar, and a new **Full Training** tab with sliders and Optuna controls.
-- Dataset loading from Hugging Face Hub, JSONL, CSV, and plain text.
-- CLI support for the pipeline with tuning flags.
-
----
-
-## Prerequisites
-
-Install additional Python packages:
-
-```bash
-pip install optuna datasets trl
-```
-
-If you want GRPO, `trl` is required; for MoE, the existing `micro_moe.py` is used.
-
----
 
 ## Overview of Changes
 
@@ -577,5 +554,3 @@ In the dispatch, call `run_full_training_pipeline` with the parsed arguments.
 - **Dataset upload**: For security, validate file types and size (e.g., limit to 100 MB).
 
 ---
-
-This guide provides a complete roadmap for adding powerful self‑improvement capabilities to Lazy Llama v4.0. Proceed file by file, and test each component as you go. Good luck!```
